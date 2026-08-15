@@ -108,8 +108,20 @@ An **OpenClaw / Hermes skill** is published too: `openclaw skills install true40
 2. Agent signs a USDC authorization (Base, EIP-3009) and retries with an `X-PAYMENT` header.
 3. Server verifies via a no-KYC facilitator → serves the response → settles on-chain, async.
 
-The amount must be **exact**, not `>=`: settlement submits the signed value and there is no refund
-path. Overpayment is refused rather than swept. See the [API reference](API.md) for the full endpoint list.
+The rules that surprise people writing their own payer:
+
+- **Pay the exact amount, not `>=`.** Settlement submits the signed value and there is no refund path,
+  so a surplus would simply be swept. **Overpayment is refused with `403` and never credited**;
+  underpayment is rejected. Equality is also what binds an authorization to the resource it was quoted
+  for.
+- **One authorization buys exactly one response.** A replay is refused, not double-charged.
+- **You are charged on success only.** Settlement is submitted only on a `2xx` — if the endpoint
+  errors or times out, your signed authorization is never submitted, so there is nothing to refund.
+
+Full rules: **[true402.dev/terms](https://true402.dev/terms)**. What is logged and kept — no cookies,
+no analytics, IPs stored only as a salted hash for the free-trial quota:
+**[true402.dev/privacy](https://true402.dev/privacy)**. See the [API reference](API.md) for the full
+endpoint list.
 
 ## Payments & anonymity
 
@@ -133,6 +145,8 @@ path. Overpayment is refused rather than swept. See the [API reference](API.md) 
 - **[OpenAPI](https://true402.dev/api/openapi.json)** — authoritative, machine-readable
 - **[llms.txt](https://true402.dev/llms.txt)** — plain-text summary for browsing LLMs
 - **[Catalog](https://true402.dev/catalog)** — the live floor, fetched from the running registry
+- **[Terms of trade](https://true402.dev/terms)** · **[Privacy](https://true402.dev/privacy)** — what
+  paying agrees to, and exactly what is retained. Written for the agent deciding whether to spend.
 
 ## Machine discovery
 
