@@ -76,6 +76,11 @@ dressed up as "safe". Live coverage: [`/v1/chain-coverage`](https://true402.dev/
 | `/v1/link-preview` | $0.003 | URL → Open Graph / unfurl card |
 | `/v1/robots-check` | $0.003 | A site's AI-crawler policy (GPTBot, ClaudeBot, …) + sitemaps + llms.txt |
 | `/v1/headers-check` | $0.003 | HTTP security-header analysis + score |
+| `/v1/base/dossier` | $0.10 | The full pre-trade dossier — token-report plus deployer reputation and the durable archive |
+| `/v1/backlinks` | $0.10 | A domain's link graph — referring domains, the dofollow split that carries authority, spam score |
+| `/v1/keyword-volume` | $0.15 | Search volume, CPC and 12-month trend for up to 200 keywords in ONE call — priced per call, not per keyword |
+| `/v1/ranked-keywords` | $0.05 | The keywords a domain already ranks for, with position and the URL that ranks |
+| `/v1/keyword-ideas` | $0.05 | Long-tail keyword ideas from a seed term, with volume and search intent |
 | `/v1/chat/completions` | cost + 3% | OpenAI-compatible inference across many models |
 
 **Multi-chain:** `token-safety`, `token-report` and `address-safety` are also mounted per chain at
