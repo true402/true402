@@ -24,33 +24,38 @@ Every endpoint below is live at `https://true402.dev/api`. There is no account, 
 
 | Endpoint | Price | Body | What |
 |---|---|---|---|
-| `/v1/base/address-safety` | $0.005 | `{ "address": string, "chain"?: string }` | Address Safety — structural profile + risk for any Base address |
-| `/v1/base/deployer-check` | $0.008 | `{ "token": string, "chain"?: string, "deep"?: boolean }` | Deployer Reputation — who created a Base token + how established that wallet is |
-| `/v1/base/liquidity-history` | $0.005 | `{ "token": string, "limit"?: number }` | Observed liquidity history for a Base token |
-| `/v1/base/liquidity-pulls` | $0.003 | `{ "since"?: number, "limit"?: number, "dex"?: string, "minQuote"?: number }` | Liquidity-pull / rug alerts on Base |
-| `/v1/base/new-pairs` | $0.003 | `{ "since"?: number, "limit"?: number, "dex"?: string, "withToken"?: boolean }` | Recently-created Base DEX pairs |
-| `/v1/base/token-report` | $0.01 | `{ "token": string, "chain"?: string }` | Token Report — flagship "can I safely ape in?" composite |
-| `/v1/base/tx-preflight` | $0.008 | `{ "from": string, "to": string, "data"?: string, "value"?: string }` | Preflight an unsigned Base transaction before signing |
-| `/v1/base/whale-swaps` | $0.005 | `{ "min"?: number, "dex"?: string, "since"?: number, "limit"?: number, "direction"?: string }` | Whale swaps on Base — large ($-value) DEX Swaps |
-| `/v1/bsc/address-safety` | $0.005 | `{ "address": string, "chain"?: string }` | Address Safety — structural profile + risk for any BNB Smart Chain (BSC) address |
-| `/v1/bsc/token-report` | $0.01 | `{ "token": string, "chain"?: string }` | Token Report — flagship "can I safely ape in?" composite |
-| `/v1/bsc/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Token safety check |
-| `/v1/chat/completions` | $0.0001–5.00 | `—` | Chat completions |
-| `/v1/defi-yields` | $0.005 | `{ "chain"?: string, "project"?: string, "asset"?: string, "stablecoinOnly"?: boolean, "minTvlUsd"?: number, "includeOutliers"?: boolean, "limit"?: number }` | DeFi yield aggregator |
-| `/v1/ethereum/address-safety` | $0.005 | `{ "address": string, "chain"?: string }` | Address Safety — structural profile + risk for any Ethereum address |
-| `/v1/ethereum/deployer-check` | $0.008 | `{ "token": string, "chain"?: string, "deep"?: boolean }` | Deployer Reputation — who created a Ethereum token + how established that wallet is |
-| `/v1/ethereum/token-report` | $0.01 | `{ "token": string, "chain"?: string }` | Token Report — flagship "can I safely ape in?" composite |
-| `/v1/ethereum/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Token safety check |
-| `/v1/headers-check` | $0.003 | `{ "url": string }` | HTTP security-headers check |
-| `/v1/link-preview` | $0.003 | `{ "url": string }` | Link preview |
-| `/v1/prediction-markets` | $0.005 | `{ "query": string, "limit"?: number }` | Prediction markets |
-| `/v1/quant` | $0.003 | `{ "function": string, "params": object }` | Quant/finance calculators |
-| `/v1/robots-check` | $0.003 | `{ "url": string }` | Robots / AI-crawler check |
-| `/v1/screenshot` | $0.01 | `{ "url": string, "fullPage"?: boolean, "width"?: number }` | Screenshot |
-| `/v1/seo-audit` | $0.04–0.8 | `{ "url": string, "mode"?: string }` | SEO/GEO audit |
-| `/v1/solana/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Solana token safety — SPL / Token-2022 structural check |
-| `/v1/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Token safety check |
-| `/v1/web-extract` | $0.005 | `{ "url": string }` | Web extract |
+| `/v1/backlinks` | $0.10 | `{ "target": string }` | A domain's backlink profile: referring domains and pages, the dofollow split that carries authority, authority rank, spam score, broken backlinks… |
+| `/v1/base/address-safety` | $0.005 | `{ "address": string, "chain"?: string }` | Structural safety profile for ANY Base address — an EOA or an arbitrary contract — before an agent sends funds to it, approves it, or calls it. |
+| `/v1/base/deployer-check` | $0.008 | `{ "token": string, "chain"?: string, "deep"?: boolean }` | Resolves the deployer of a Base token and profiles that wallet's reputation: age (tx-count), balance, contracts shipped, and whether it is a FRESH… |
+| `/v1/base/dossier` | $0.10 | `{ "token": string, "chain"?: string }` | Everything we know about a Base ERC-20, in one call. |
+| `/v1/base/liquidity-history` | $0.005 | `{ "token": string, "limit"?: number }` | Observed liquidity history for a Base token, from our own DEX archive. |
+| `/v1/base/liquidity-pulls` | $0.003 | `{ "since"?: number, "limit"?: number, "dex"?: string, "minQuote"?: number }` | Liquidity-pull / rug alerts on Base — Burn (liquidity-removal) events on recently-launched DEX pools (the new-pairs watcher's set). |
+| `/v1/base/new-pairs` | $0.003 | `{ "since"?: number, "limit"?: number, "dex"?: string, "withToken"?: boolean }` | Recently-created Base DEX pairs (Uniswap V3 + Aerodrome) from a background log-watcher — fresh token launches for trading agents/snipers. |
+| `/v1/base/token-report` | $0.01 | `{ "token": string, "chain"?: string }` | The flagship composite for a Base ERC-20 — one call instead of five. |
+| `/v1/base/tx-preflight` | $0.008 | `{ "from": string, "to": string, "data"?: string, "value"?: string }` | Check a Base transaction BEFORE signing it. |
+| `/v1/base/whale-swaps` | $0.005 | `{ "min"?: number, "dex"?: string, "since"?: number, "limit"?: number, "direction"?: string }` | Recent large ($-value) DEX Swap events (Uniswap V3 + Aerodrome) on the Base pools the new-pairs watcher tracks — a whale-following / copy-trading s… |
+| `/v1/bsc/address-safety` | $0.005 | `{ "address": string, "chain"?: string }` | Structural safety profile for ANY BNB Smart Chain (BSC) address — an EOA or an arbitrary contract — before an agent sends funds to it, approves it… |
+| `/v1/bsc/token-report` | $0.01 | `{ "token": string, "chain"?: string }` | The flagship composite for a BNB Smart Chain (BSC) ERC-20 — one call instead of five. |
+| `/v1/bsc/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Rug/honeypot safety check for an ERC-20 token on BNB Smart Chain (BSC) (from on-chain reads — no API key): ERC-20 conformance, ownership renounce… |
+| `/v1/chat/completions` | $0.0001–5.00 | — | OpenAI-compatible chat completions endpoint. |
+| `/v1/defi-yields` | $0.005 | `{ "chain"?: string, "project"?: string, "asset"?: string, "stablecoinOnly"?: boolean, "minTvlUsd"?: number, "includeOutliers"?: boolean, "limit"?: number }` | Filter + rank live DeFi lending/staking pool APYs across every protocol/chain (DefiLlama, ~15k pools). |
+| `/v1/ethereum/address-safety` | $0.005 | `{ "address": string, "chain"?: string }` | Structural safety profile for ANY Ethereum address — an EOA or an arbitrary contract — before an agent sends funds to it, approves it, or calls it. |
+| `/v1/ethereum/deployer-check` | $0.008 | `{ "token": string, "chain"?: string, "deep"?: boolean }` | Resolves the deployer of a Ethereum token and profiles that wallet's reputation: age (tx-count), balance, contracts shipped, and whether it is a FR… |
+| `/v1/ethereum/token-report` | $0.01 | `{ "token": string, "chain"?: string }` | The flagship composite for a Ethereum ERC-20 — one call instead of five. |
+| `/v1/ethereum/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Rug/honeypot safety check for an ERC-20 token on Ethereum (from on-chain reads — no API key): ERC-20 conformance, ownership renounce, mint-capabili… |
+| `/v1/headers-check` | $0.003 | `{ "url": string }` | Fetch a URL and analyse its HTTP security headers (HSTS, CSP, X-Frame-Options, …) into present/missing + a 0–100 score. |
+| `/v1/keyword-ideas` | $0.05 | `{ "seed": string, "limit"?: integer, "location"?: integer, "language"?: string }` | Related and long-tail keyword ideas for a seed term, each with search volume, CPC, competition and search intent. |
+| `/v1/keyword-volume` | $0.15 | `{ "keywords": string[], "location"?: integer, "language"?: string }` | Monthly search volume, CPC and competition for a batch of keywords, with a 12-month trend per term. |
+| `/v1/link-preview` | $0.003 | `{ "url": string }` | Fetch a URL and return its Open Graph card (title, description, image, site name, favicon, canonical). |
+| `/v1/prediction-markets` | $0.005 | `{ "query": string, "limit"?: number }` | Keyword-search live prediction markets across Polymarket, Limitless, and Manifold; returns normalized markets (probability outcomes, USD volume, cl… |
+| `/v1/quant` | $0.003 | `{ "function": string, "params": object }` | Deterministic finance calculators in one dispatch endpoint. |
+| `/v1/ranked-keywords` | $0.05 | `{ "target": string, "limit"?: integer, "location"?: integer, "language"?: string }` | Which keywords a domain already ranks for in organic search, with position, search volume, CPC and competition. |
+| `/v1/robots-check` | $0.003 | `{ "url": string }` | Fetch a site's robots.txt + llms.txt and report whether the major AI crawlers are allowed/blocked, plus sitemaps. |
+| `/v1/screenshot` | $0.01 | `{ "url": string, "fullPage"?: boolean, "width"?: number }` | Render a web page in headless Chromium and return a PNG screenshot as base64 JSON. |
+| `/v1/seo-audit` | $0.04–0.8 | `{ "url": string, "mode"?: string }` | Audit a web page for SEO + GEO (generative-engine optimization). |
+| `/v1/solana/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Rug/trap safety check for a Solana SPL or Token-2022 token: mint authority (supply inflation), freeze authority (the Solana honeypot — the issuer c… |
+| `/v1/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Rug/honeypot safety check for an ERC-20 token on Base (from on-chain reads — no API key): ERC-20 conformance, ownership renounce, mint-capability… |
+| `/v1/web-extract` | $0.005 | `{ "url": string }` | Fetch a web page and return clean readable text + light markdown + title/description/links. |
 
 ## Paying
 
