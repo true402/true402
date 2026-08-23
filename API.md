@@ -18,7 +18,8 @@ Every endpoint below is live at `https://true402.dev/api`. There is no account, 
 | `/v1/models` | GET | List available models |
 | `/v1/models/{modelId}` | GET | Get model details |
 | `/v1/services` | GET | List registered services |
-| `/v1/services/register` | POST | Register an x402 service |
+| `/v1/services/register` | GET | The registration contract — schema, worked example, common failures |
+| `/v1/services/register` | POST | Register an x402 service (see **Listing a service** below) |
 
 ## Paid
 
@@ -52,10 +53,60 @@ Every endpoint below is live at `https://true402.dev/api`. There is no account, 
 | `/v1/ranked-keywords` | $0.05 | `{ "target": string, "limit"?: integer, "location"?: integer, "language"?: string }` | Which keywords a domain already ranks for in organic search, with position, search volume, CPC and competition. |
 | `/v1/robots-check` | $0.003 | `{ "url": string }` | Fetch a site's robots.txt + llms.txt and report whether the major AI crawlers are allowed/blocked, plus sitemaps. |
 | `/v1/screenshot` | $0.01 | `{ "url": string, "fullPage"?: boolean, "width"?: number }` | Render a web page in headless Chromium and return a PNG screenshot as base64 JSON. |
-| `/v1/seo-audit` | $0.04–0.8 | `{ "url": string, "mode"?: string }` | Audit a web page for SEO + GEO (generative-engine optimization). |
+| `/v1/seo-audit` | $0.04–0.2 | `{ "url"?: string, "urls"?: string[], "mode"?: string }` | Audit web pages for SEO + GEO (generative-engine optimization). |
 | `/v1/solana/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Rug/trap safety check for a Solana SPL or Token-2022 token: mint authority (supply inflation), freeze authority (the Solana honeypot — the issuer c… |
 | `/v1/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Rug/honeypot safety check for an ERC-20 token on Base (from on-chain reads — no API key): ERC-20 conformance, ownership renounce, mint-capability… |
 | `/v1/web-extract` | $0.005 | `{ "url": string }` | Fetch a web page and return clean readable text + light markdown + title/description/links. |
+
+## Listing a service
+
+Free. No payment, no approval, no account — the wallet in your manifest is your identity.
+
+There are two ways in. Most registrations that fail do so because the caller used neither.
+
+**1. Publish a manifest (recommended).** Serve this at `https://<your-domain>/.well-known/x402-service.json`:
+
+```json
+{
+  "x402": "1.0",
+  "name": "my-service",
+  "description": "A useful x402 service",
+  "capabilities": ["summarize"],
+  "pricing": { "currency": "USDC", "base": "0.001", "unit": "request" },
+  "payment": {
+    "address": "0x1234567890abcdef1234567890abcdef12345678",
+    "chain": "base",
+    "facilitator": "https://pay.openfacilitator.io"
+  },
+  "endpoint": "https://my-service.example.com/v1/process"
+}
+```
+
+Then register with just the origin — we fetch that document:
+
+```bash
+curl -X POST https://true402.dev/api/v1/services/register \
+  -H 'content-type: application/json' \
+  -d '{"url":"https://my-service.example.com"}'
+```
+
+**2. Send the manifest inline.** Use this when you cannot serve the well-known path:
+
+```bash
+curl -X POST https://true402.dev/api/v1/services/register \
+  -H 'content-type: application/json' \
+  -d '{"url":"https://my-service.example.com","manifest":{ ...the object above... }}'
+```
+
+### If it is refused
+
+| Status | `type` | What to do |
+|---|---|---|
+| 422 | `manifest_unavailable` | We could not fetch `<url>/.well-known/x402-service.json` and you sent no `manifest`. Publish that document, or include `manifest` in the body. |
+| 422 | `manifest_invalid` | The document was fetched but is not a valid manifest. The response names the failing field. |
+| 400 | `validation_error` | `url` is missing or not a valid URL. |
+
+`GET /v1/services/register` returns this same contract as JSON, including the worked example.
 
 ## Paying
 
