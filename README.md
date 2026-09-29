@@ -110,16 +110,18 @@ An **OpenClaw / Hermes skill** is published too: `openclaw skills install true40
 ## The x402 flow
 
 1. Agent POSTs without payment → `402` with payment requirements.
-2. Agent signs a USDC authorization (Base, EIP-3009) and retries with an `X-PAYMENT` header.
+2. Agent signs a USDC authorization (Base, EIP-3009) and retries with a `PAYMENT-SIGNATURE` header
+   (x402 v2; the v1 name `X-PAYMENT` is also accepted — see [Payment headers](API.md#payment-headers-v2-and-v1-are-both-accepted)).
 3. Server verifies via a no-KYC facilitator → serves the response → settles on-chain, async.
 
 The rules that surprise people writing their own payer:
 
 - **Pay the exact amount, not `>=`.** Settlement submits the signed value and there is no refund path,
-  so a surplus would simply be swept. **Overpayment is refused with `403` and never credited**;
+  so a surplus would simply be swept. **Overpayment is refused with `402` and never credited**;
   underpayment is rejected. Equality is also what binds an authorization to the resource it was quoted
   for.
-- **One authorization buys exactly one response.** A replay is refused, not double-charged.
+- **One authorization buys exactly one response.** A replay is refused, not double-charged — under
+  either header name.
 - **You are charged on success only.** Settlement is submitted only on a `2xx` — if the endpoint
   errors or times out, your signed authorization is never submitted, so there is nothing to refund.
 
