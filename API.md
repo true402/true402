@@ -111,16 +111,58 @@ curl -X POST https://true402.dev/api/v1/services/register \
 ## Paying
 
 ```bash
-# 1. unpaid -> 402 with the requirements
+# 1. unpaid -> 402 with the requirements (body + a base64 PAYMENT-REQUIRED header)
 curl -X POST https://true402.dev/api/v1/base/token-safety \
   -H 'content-type: application/json' -d '{"token":"0x…"}'
 
-# 2. sign an EIP-3009 USDC authorization for EXACTLY accepts[0].maxAmountRequired
-# 3. retry with the X-PAYMENT header -> 200
+# 2. sign an EIP-3009 USDC authorization for EXACTLY accepts[i].amount
+# 3. retry with the PAYMENT-SIGNATURE header -> 200 + a PAYMENT-RESPONSE receipt
 ```
 
 The amount must be **exact**, not `>=`. Settlement submits the value you signed and there is no
-refund path, so an overpayment would simply be swept — it is refused with `403` instead.
+refund path, so an overpayment would simply be swept — it is refused with `402` instead.
+
+### Payment headers: v2 and v1 are both accepted
+
+true402 speaks **x402 v2**. Send the base64-encoded payment in `PAYMENT-SIGNATURE`. The v1 header
+name `X-PAYMENT` is still accepted, because many clients — including our own npm packages up to
+1.2.x — send it.
+
+| You send | Result |
+|---|---|
+| `PAYMENT-SIGNATURE` (v2, recommended) | ✅ |
+| `X-PAYMENT` (v1 name) | ✅ same checks, same answer |
+| Both, with the **same** value | ✅ one payment |
+| Both, with **different** values | `400` — we never guess which one you meant |
+
+The payload inside can take either layout:
+
+```jsonc
+// v2 (what @x402/fetch and our clients from 1.3 send)
+{ "x402Version": 2, "accepted": { /* the accepts[] entry you chose, verbatim */ }, "payload": { "signature": "0x…", "authorization": { … } } }
+
+// v1 layout — scheme/network at the top level (still accepted)
+{ "x402Version": 2, "scheme": "exact", "network": "eip155:8453", "payload": { … } }
+```
+
+**Why accepting both is safe:** the header name and the layout only tell us *where to look*. What is
+verified is always the signed authorization, against **our own quote**: the chain, the USDC contract,
+`payTo`, and the exact amount. So neither form can steer verification elsewhere:
+
+- `network` must be the CAIP-2 id we quoted (`eip155:8453`). A v1 alias like `base`, a testnet or
+  another chain is refused, not translated.
+- A top-level `scheme`/`network` that contradicts `accepted` is refused.
+- Each authorization is accepted **once**, keyed on the signed nonce, not on the header. Replaying
+  it under the other header name or in the other layout is still a replay (`402`).
+
+**Receipts** come back in both `PAYMENT-RESPONSE` (v2) and `X-PAYMENT-RESPONSE` (v1), with the same
+value. A payment that fails verification or settlement answers `402` with a failure receipt; a
+malformed payload answers `400`.
+
+**A client built only for v1 cannot pay us.** Our 402 names networks in CAIP-2 form
+(`eip155:8453`), which the v2 spec requires and directory crawlers validate, and v1-only clients
+(e.g. `x402-fetch` 1.x) reject that before they sign anything. Use a v2 client — `@x402/fetch`,
+the official Python `x402` package, the Go module, or one of ours below.
 
 Ready-made clients: `@true402.dev/mcp-server`, `@true402.dev/langchain`, `@true402.dev/ai-sdk`,
 `@true402.dev/agentkit`, `elizaos-plugin-true402`, `crewai-true402`, `game-true402`, and
