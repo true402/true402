@@ -125,8 +125,8 @@ refund path, so an overpayment would simply be swept — it is refused with `402
 ### Payment headers: v2 and v1 are both accepted
 
 true402 speaks **x402 v2**. Send the base64-encoded payment in `PAYMENT-SIGNATURE`. The v1 header
-name `X-PAYMENT` is still accepted, because many clients — including our own npm packages up to
-1.2.x — send it.
+name `X-PAYMENT` is still accepted, because many clients — including our own npm packages released
+before 30 September 2026 — send it.
 
 | You send | Result |
 |---|---|
@@ -138,7 +138,7 @@ name `X-PAYMENT` is still accepted, because many clients — including our own n
 The payload inside can take either layout:
 
 ```jsonc
-// v2 (what @x402/fetch and our clients from 1.3 send)
+// v2 (what @x402/fetch and our current clients send)
 { "x402Version": 2, "accepted": { /* the accepts[] entry you chose, verbatim */ }, "payload": { "signature": "0x…", "authorization": { … } } }
 
 // v1 layout — scheme/network at the top level (still accepted)
