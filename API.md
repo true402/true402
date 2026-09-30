@@ -167,3 +167,30 @@ the official Python `x402` package, the Go module, or one of ours below.
 Ready-made clients: `@true402.dev/mcp-server`, `@true402.dev/langchain`, `@true402.dev/ai-sdk`,
 `@true402.dev/agentkit`, `elizaos-plugin-true402`, `crewai-true402`, `game-true402`, and
 `npx @true402.dev/rugcheck` for a terminal.
+
+### Update notices for our clients
+
+From `@true402.dev/mcp-server` 1.2.0, the npm SDKs 1.4.0 (`rugcheck` 1.3.0, `elizaos-plugin-true402`
+1.5.0) and the Python packages 1.4.0, each client sends a User-Agent like `true402-langchain/1.4.0`.
+When a newer release exists, the API answers with three headers:
+
+| Header | Value |
+|---|---|
+| `X-True402-Client-Latest` | the current version, e.g. `1.5.0` |
+| `X-True402-Client-Update` | `recommended`, or `required` when your version has a security fix pending |
+| `X-True402-Client-Notice` | the same, as a sentence for a human reading headers |
+
+The client then prints **one line, once per process**: a `console.warn` / `warnings.warn` in the SDKs,
+and an extra text block in the first tool result for the MCP server (stdout is its protocol, and most
+hosts hide stderr). Nothing is blocked — every payment is verified on our side whatever the client.
+
+Two deliberate choices:
+
+- **No call to npm or PyPI from your machine.** The check rides on requests you were already making to
+  true402.
+- **The client writes the message, not the server.** It prints its own package name and install
+  command, and takes only a strictly validated `x.y.z` from the response. A client can be pointed at any
+  seller, and a hostile one must not be able to make it tell you to install something else.
+
+Versions before these send no identifying User-Agent and cannot be told — update them by hand:
+`npm i <package>@latest` or `pip install -U <package>`.
