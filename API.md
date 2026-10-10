@@ -108,6 +108,36 @@ curl -X POST https://true402.dev/api/v1/services/register \
 
 `GET /v1/services/register` returns this same contract as JSON, including the worked example.
 
+### Changing a listing
+
+Two ways, depending on what you control:
+
+- **You control the domain:** update `/.well-known/x402-service.json` and register again. Free, and it
+  also works if you have lost the payout wallet.
+- **You control the payout wallet:** `POST /v1/services/{id}/update` with `{"manifest": { ...the new
+  manifest... }}`. It costs **$0.01**, and the payment must be signed by the wallet the listing pays
+  today (its `manifest.payment.address`, Base USDC). That signature is the proof that it is your
+  listing, so this is also how you move a listing to a new payout address.
+
+```bash
+# 1. unpaid -> 402 quoting $0.01
+curl -X POST https://true402.dev/api/v1/services/<id>/update \
+  -H 'content-type: application/json' -d '{"manifest":{ ...new manifest... }}'
+# 2. sign it FROM the listing's current payout wallet, retry with PAYMENT-SIGNATURE -> 200
+```
+
+You are only charged when the update is applied. Any refusal is a 4xx and costs nothing:
+
+| Status | `type` | Meaning |
+|---|---|---|
+| 403 | `not_listing_owner` | The payment came from a different wallet. The message names the one that must sign. |
+| 403 | `payer_unproven` | Not a Base USDC (EIP-3009) payment, so the paying wallet cannot be established. |
+| 400 | `validation_error` / `invalid_url` | The new manifest is invalid, or its endpoint or facilitator is not a public address. |
+| 404 | `not_found` | No such listing. |
+| 409 | `unchanged` | The manifest is identical to the stored one. |
+
+The listing keeps its `id`, `url` and history.
+
 ## Paying
 
 ```bash
