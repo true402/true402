@@ -137,6 +137,9 @@ endpoint list.
   Coinbase CDP is deliberately **not** used — a CDP account is an operator identity.
 - **Lightning** (BTC via BOLT11) is an optional second rail, off by default.
 - Free to list. Ranked by settlement history, not by payment to be listed.
+- **Also in Coinbase's Bazaar / Agentic.Market:** six on-chain checks are resold through
+  [FiatDock](https://fiatdock.com), which settles straight to the true402 wallet. Listings and
+  prices: [API.md](API.md#also-on-agenticmarket-via-fiatdock).
 
 ## Safety controls
 
