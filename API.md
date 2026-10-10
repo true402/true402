@@ -60,7 +60,7 @@ Every endpoint below is live at `https://true402.dev/api`. There is no account, 
 
 ## Also on Agentic.Market (via FiatDock)
 
-Six of the on-chain checks are also sold through the [FiatDock](https://fiatdock.com) marketplace,
+Twenty of the stalls are also sold through the [FiatDock](https://fiatdock.com) marketplace,
 so they show up in Coinbase's x402 Bazaar and in Agentic.Market search. Same checks, same prices,
 and the payment still goes straight to the true402 wallet (`0xFe257Ef6Dc89F5b688aC52Ef3eb8648C629fA9C4`).
 Use whichever your agent already knows how to pay: each listing is a plain x402 endpoint (`POST`,
@@ -74,9 +74,23 @@ the tool's arguments as the JSON body, USDC on Base).
 | [Deployer Check](https://fiatdock.com/s/svc_fc424a1d-8f50-42dc-8d65-d99ce85bee46) | $0.008 | `{ "token": string, "chain"?: "base" \| "ethereum" }` |
 | [Tx Preflight](https://fiatdock.com/s/svc_b459b285-77ee-4882-88c4-b08f4a401b91) | $0.008 | `{ "from": string, "to": string, "data"?: string, "value"?: string }` (Base) |
 | [Token Dossier](https://fiatdock.com/s/svc_eddced45-d48d-4857-a853-571760dde719) | $0.10 | `{ "token": string }` (Base) |
+| [Solana Token Safety](https://fiatdock.com/s/svc_59058cbb-f8a1-451c-bd26-ae89ab7cc5df) | $0.005 | `{ "token": string }` (base58 mint) |
+| [Liquidity History](https://fiatdock.com/s/svc_12587477-5940-4e4a-ac20-aefcb9a35baa) | $0.005 | `{ "token": string, "limit"?: number }` (Base) |
+| [New Pairs](https://fiatdock.com/s/svc_a397f690-70c1-4e79-851a-9e1d436d03b8) | $0.003 | `{ "since"?: number, "limit"?: number, "dex"?: string }` (Base) |
+| [Liquidity Pulls](https://fiatdock.com/s/svc_fbe25ea2-04b2-4983-ac92-891a4bb68479) | $0.003 | `{ "since"?: number, "limit"?: number, "dex"?: string, "minQuote"?: number }` (Base) |
+| [Whale Swaps](https://fiatdock.com/s/svc_65609f66-a093-445d-ada7-9d13fed22953) | $0.005 | `{ "min"?: number, "dex"?: string, "since"?: number, "limit"?: number, "direction"?: string }` (Base) |
+| [Prediction Markets](https://fiatdock.com/s/svc_600c8759-f2e1-4bd2-96fc-737e5255c3e9) | $0.005 | `{ "query": string, "limit"?: number }` |
+| [DeFi Yields](https://fiatdock.com/s/svc_b5dd18c2-c82a-4f67-b287-b90598a670a5) | $0.005 | `{ "chain"?: string, "project"?: string, "asset"?: string, "stablecoinOnly"?: boolean, "minTvlUsd"?: number, "limit"?: number }` |
+| [Quant](https://fiatdock.com/s/svc_64d3be32-5ced-4d2d-89fb-02132b0088dd) | $0.003 | `{ "function": string, "params": object }` |
+| [Screenshot](https://fiatdock.com/s/svc_bbc969e8-c8dc-49f7-804e-f87d5d9044ad) | $0.01 | `{ "url": string, "fullPage"?: boolean, "width"?: number }` |
+| [Web Extract](https://fiatdock.com/s/svc_8b5c724e-a162-4b80-9976-7975b58c1552) | $0.005 | `{ "url": string }` |
+| [Link Preview](https://fiatdock.com/s/svc_f8d26c50-b1ed-49b5-b962-7bfcb6eb11f4) | $0.003 | `{ "url": string }` |
+| [SEO + GEO Page Audit](https://fiatdock.com/s/svc_e60d1345-ee04-4f6f-9c85-915c6970976d) | $0.04 | `{ "url": string, "mode"?: "both" \| "seo" \| "geo" }` (one page) |
+| [Robots Check](https://fiatdock.com/s/svc_5c3f119b-73f0-4ef0-b456-ddd188c2e701) | $0.003 | `{ "url": string }` |
+| [Security Headers Check](https://fiatdock.com/s/svc_9b3a144e-bef3-4031-81b7-e40b51012564) | $0.003 | `{ "url": string }` |
 
-Calling `true402.dev` directly gives you more: every chain and stall in the table above, and the
-free daily allowance (FiatDock calls are always paid).
+Calling `true402.dev` directly gives you more: multi-page SEO audits, the keyword and backlink
+stalls, and the free daily allowance (FiatDock calls are always paid).
 
 ## Listing a service
 
