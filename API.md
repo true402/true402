@@ -58,6 +58,26 @@ Every endpoint below is live at `https://true402.dev/api`. There is no account, 
 | `/v1/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Rug/honeypot safety check for an ERC-20 token on Base (from on-chain reads — no API key): ERC-20 conformance, ownership renounce, mint-capability… |
 | `/v1/web-extract` | $0.005 | `{ "url": string }` | Fetch a web page and return clean readable text + light markdown + title/description/links. |
 
+## Also on Agentic.Market (via FiatDock)
+
+Six of the on-chain checks are also sold through the [FiatDock](https://fiatdock.com) marketplace,
+so they show up in Coinbase's x402 Bazaar and in Agentic.Market search. Same checks, same prices,
+and the payment still goes straight to the true402 wallet (`0xFe257Ef6Dc89F5b688aC52Ef3eb8648C629fA9C4`).
+Use whichever your agent already knows how to pay: each listing is a plain x402 endpoint (`POST`,
+the tool's arguments as the JSON body, USDC on Base).
+
+| Listing | Price | Body |
+|---|---|---|
+| [Token Safety](https://fiatdock.com/s/svc_712fa970-0f2a-4092-8042-e75946cead03) | $0.005 | `{ "token": string, "chain"?: "base" \| "ethereum" \| "bsc" }` |
+| [Token Report](https://fiatdock.com/s/svc_2bbf8ea2-baed-4f72-abac-6295f880b67a) | $0.01 | `{ "token": string, "chain"?: "base" \| "ethereum" \| "bsc" }` |
+| [Address Safety](https://fiatdock.com/s/svc_78c2e7d0-a1a6-4617-a45b-c0ab017037bc) | $0.005 | `{ "address": string, "chain"?: "base" \| "ethereum" \| "bsc" }` |
+| [Deployer Check](https://fiatdock.com/s/svc_fc424a1d-8f50-42dc-8d65-d99ce85bee46) | $0.008 | `{ "token": string, "chain"?: "base" \| "ethereum" }` |
+| [Tx Preflight](https://fiatdock.com/s/svc_b459b285-77ee-4882-88c4-b08f4a401b91) | $0.008 | `{ "from": string, "to": string, "data"?: string, "value"?: string }` (Base) |
+| [Token Dossier](https://fiatdock.com/s/svc_eddced45-d48d-4857-a853-571760dde719) | $0.10 | `{ "token": string }` (Base) |
+
+Calling `true402.dev` directly gives you more: every chain and stall in the table above, and the
+free daily allowance (FiatDock calls are always paid).
+
 ## Listing a service
 
 Free. No payment, no approval, no account — the wallet in your manifest is your identity.
