@@ -119,11 +119,29 @@ Two ways, depending on what you control:
   today (its `manifest.payment.address`, Base USDC). That signature is the proof that it is your
   listing, so this is also how you move a listing to a new payout address.
 
+The payment must also be **bound to this exact change**: set the EIP-3009 `nonce` to
+
+```
+keccak256("true402:listing-update:v1:" + <id> + ":" + <the exact request body you send>)
+```
+
+so a $0.01 payment your wallet signed for anything else (another purchase, or a different update)
+cannot be used to change your listing. A stock x402 client picks a random nonce, so sign this one
+yourself, for example with viem:
+
+```js
+const body = JSON.stringify({ manifest });
+const nonce = keccak256(toBytes(`true402:listing-update:v1:${id}:${body}`));
+// signTypedData TransferWithAuthorization { from: payoutWallet, to: accepts[0].payTo,
+//   value: accepts[0].amount, validAfter, validBefore, nonce } — then POST `body` unchanged
+//   with the PAYMENT-SIGNATURE header.
+```
+
 ```bash
-# 1. unpaid -> 402 quoting $0.01
+# 1. unpaid -> 402 quoting $0.01 (accepts[0] gives payTo and amount)
 curl -X POST https://true402.dev/api/v1/services/<id>/update \
   -H 'content-type: application/json' -d '{"manifest":{ ...new manifest... }}'
-# 2. sign it FROM the listing's current payout wallet, retry with PAYMENT-SIGNATURE -> 200
+# 2. sign FROM the listing's current payout wallet with the bound nonce, retry the SAME body -> 200
 ```
 
 You are only charged when the update is applied. Any refusal is a 4xx and costs nothing:
@@ -131,6 +149,7 @@ You are only charged when the update is applied. Any refusal is a 4xx and costs 
 | Status | `type` | Meaning |
 |---|---|---|
 | 403 | `not_listing_owner` | The payment came from a different wallet. The message names the one that must sign. |
+| 403 | `payment_not_bound` | The nonce is not bound to this update. The message gives the nonce expected for the body you sent. |
 | 403 | `payer_unproven` | Not a Base USDC (EIP-3009) payment, so the paying wallet cannot be established. |
 | 400 | `validation_error` / `invalid_url` | The new manifest is invalid, or its endpoint or facilitator is not a public address. |
 | 404 | `not_found` | No such listing. |
