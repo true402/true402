@@ -27,7 +27,7 @@ Every endpoint below is live at `https://true402.dev/api`. There is no account, 
 |---|---|---|---|
 | `/v1/backlinks` | $0.10 | `{ "target": string }` | A domain's backlink profile: referring domains and pages, the dofollow split that carries authority, authority rank, spam score, broken backlinks… |
 | `/v1/base/address-safety` | $0.005 | `{ "address": string, "chain"?: string }` | Structural safety profile for ANY Base address — an EOA or an arbitrary contract — before an agent sends funds to it, approves it, or calls it. |
-| `/v1/base/deployer-check` | $0.008 | `{ "token": string, "chain"?: string, "deep"?: boolean }` | Resolves the deployer of a Base token and profiles that wallet's reputation: age (tx-count), balance, contracts shipped, and whether it is a FRESH… |
+| `/v1/base/deployer-check` | $0.008 | `{ "token": string, "chain"?: string, "deep"?: boolean }` | Resolves the deployer of a Base token and profiles that wallet's reputation: age (tx-count), balance, and whether it is a FRESH throwaway spun up f… |
 | `/v1/base/dossier` | $0.10 | `{ "token": string, "chain"?: string }` | Everything we know about a Base ERC-20, in one call. |
 | `/v1/base/liquidity-history` | $0.005 | `{ "token": string, "limit"?: number }` | Observed liquidity history for a Base token, from our own DEX archive. |
 | `/v1/base/liquidity-pulls` | $0.003 | `{ "since"?: number, "limit"?: number, "dex"?: string, "minQuote"?: number }` | Liquidity-pull / rug alerts on Base — Burn (liquidity-removal) events on recently-launched DEX pools (the new-pairs watcher's set). |
@@ -41,7 +41,7 @@ Every endpoint below is live at `https://true402.dev/api`. There is no account, 
 | `/v1/chat/completions` | $0.0001–5.00 | — | OpenAI-compatible chat completions endpoint. |
 | `/v1/defi-yields` | $0.005 | `{ "chain"?: string, "project"?: string, "asset"?: string, "stablecoinOnly"?: boolean, "minTvlUsd"?: number, "includeOutliers"?: boolean, "limit"?: number }` | Filter + rank live DeFi lending/staking pool APYs across every protocol/chain (DefiLlama, ~15k pools). |
 | `/v1/ethereum/address-safety` | $0.005 | `{ "address": string, "chain"?: string }` | Structural safety profile for ANY Ethereum address — an EOA or an arbitrary contract — before an agent sends funds to it, approves it, or calls it. |
-| `/v1/ethereum/deployer-check` | $0.008 | `{ "token": string, "chain"?: string, "deep"?: boolean }` | Resolves the deployer of a Ethereum token and profiles that wallet's reputation: age (tx-count), balance, contracts shipped, and whether it is a FR… |
+| `/v1/ethereum/deployer-check` | $0.008 | `{ "token": string, "chain"?: string, "deep"?: boolean }` | Resolves the deployer of a Ethereum token and profiles that wallet's reputation: age (tx-count), balance, and whether it is a FRESH throwaway spun… |
 | `/v1/ethereum/token-report` | $0.01 | `{ "token": string, "chain"?: string }` | The flagship composite for a Ethereum ERC-20 — one call instead of five. |
 | `/v1/ethereum/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Rug/honeypot safety check for an ERC-20 token on Ethereum (from on-chain reads — no API key): ERC-20 conformance, ownership renounce, mint-capabili… |
 | `/v1/headers-check` | $0.003 | `{ "url": string }` | Fetch a URL and analyse its HTTP security headers (HSTS, CSP, X-Frame-Options, …) into present/missing + a 0–100 score. |
