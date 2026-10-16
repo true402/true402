@@ -61,7 +61,7 @@ dressed up as "safe". Live coverage: [`/v1/chain-coverage`](https://true402.dev/
 | Service | Price | What it does |
 |---|---|---|
 | `/v1/base/token-safety` | $0.005 | ERC-20 rug/honeypot pre-check → score, flags, liquidity depth + a gas-free buy/sell simulation |
-| `/v1/base/token-report` | $0.01 | The composite: safety + live rug/whale activity → one avoid/caution/ok verdict |
+| `/v1/base/token-report` | $0.008 | The composite: safety + live rug/whale activity → one avoid/caution/ok verdict |
 | `/v1/base/address-safety` | $0.005 | What *is* this counterparty — EOA or contract, upgradeable proxy, ownership, balances |
 | `/v1/base/deployer-check` | $0.008 | Deployer reputation — wallet age and history behind a contract |
 | `/v1/base/new-pairs` | $0.003 | Newly created Base DEX pairs — fresh launches, as they happen |
