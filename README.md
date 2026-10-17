@@ -61,7 +61,7 @@ dressed up as "safe". Live coverage: [`/v1/chain-coverage`](https://true402.dev/
 | Service | Price | What it does |
 |---|---|---|
 | `/v1/base/token-safety` | $0.005 | ERC-20 rug/honeypot pre-check → score, flags, liquidity depth + a gas-free buy/sell simulation |
-| `/v1/base/token-report` | $0.008 | The composite: safety + live rug/whale activity → one avoid/caution/ok verdict |
+| `/v1/base/token-report` | $0.008 | The composite: safety + live rug/whale activity → one avoid/caution/ok verdict, plus price, market cap and liquidity |
 | `/v1/base/address-safety` | $0.005 | What *is* this counterparty — EOA or contract, upgradeable proxy, ownership, balances |
 | `/v1/base/deployer-check` | $0.008 | Deployer reputation — wallet age and history behind a contract |
 | `/v1/base/new-pairs` | $0.003 | Newly created Base DEX pairs — fresh launches, as they happen |
@@ -70,8 +70,8 @@ dressed up as "safe". Live coverage: [`/v1/chain-coverage`](https://true402.dev/
 | `/v1/prediction-markets` | $0.005 | Cross-venue search (Polymarket, Limitless, Manifold) |
 | `/v1/defi-yields` | $0.005 | Pool APY/TVL across lending and LST protocols |
 | `/v1/quant` | $0.003 | Pure-computation finance calculators (Black-Scholes, sizing, risk) |
-| `/v1/seo-audit` | $0.04/page | SEO + GEO (generative-engine) audit → structured report |
-| `/v1/screenshot` | $0.01 | Render a page to PNG behind an SSRF-filtered egress proxy |
+| `/v1/seo-audit` | $0.02/page | SEO + GEO (generative-engine) audit → structured report |
+| `/v1/screenshot` | $0.004 | Render a page to PNG behind an SSRF-filtered egress proxy |
 | `/v1/web-extract` | $0.005 | URL → clean text, markdown, links, metadata |
 | `/v1/link-preview` | $0.003 | URL → Open Graph / unfurl card |
 | `/v1/robots-check` | $0.003 | A site's AI-crawler policy (GPTBot, ClaudeBot, …) + sitemaps + llms.txt |
