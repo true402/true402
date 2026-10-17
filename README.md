@@ -80,6 +80,7 @@ dressed up as "safe". Live coverage: [`/v1/chain-coverage`](https://true402.dev/
 | `/v1/backlinks` | $0.10 | A domain's link graph — referring domains, the dofollow split that carries authority, spam score |
 | `/v1/keyword-volume` | $0.15 | Search volume, CPC and 12-month trend for up to 200 keywords in ONE call — priced per call, not per keyword |
 | `/v1/ranked-keywords` | $0.05 | The keywords a domain already ranks for, with position and the URL that ranks |
+| `/v1/serp` | $0.02 | Live Google results for a query (top 10–30) and where a target domain ranks |
 | `/v1/keyword-ideas` | $0.05 | Long-tail keyword ideas from a seed term, with volume and search intent |
 | `/v1/chat/completions` | cost + 3% | OpenAI-compatible inference across many models |
 
