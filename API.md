@@ -54,8 +54,8 @@ Every endpoint below is live at `https://true402.dev/api`. There is no account, 
 | `/v1/quant` | $0.003 | `{ "function": string, "params": object }` | Deterministic finance calculators in one dispatch endpoint. |
 | `/v1/ranked-keywords` | $0.05 | `{ "target": string, "limit"?: integer, "location"?: integer, "language"?: string }` | Which keywords a domain already ranks for in organic search, with position, search volume, CPC and competition. |
 | `/v1/robots-check` | $0.003 | `{ "url": string }` | Fetch a site's robots.txt + llms.txt and report whether the major AI crawlers are allowed/blocked, plus sitemaps. |
-| `/v1/screenshot` | $0.01 | `{ "url": string, "fullPage"?: boolean, "width"?: number }` | Render a web page in headless Chromium and return a PNG screenshot as base64 JSON. |
-| `/v1/seo-audit` | $0.04–0.2 | `{ "url"?: string, "urls"?: string[], "mode"?: string }` | Audit web pages for SEO + GEO (generative-engine optimization). |
+| `/v1/screenshot` | $0.004 | `{ "url": string, "fullPage"?: boolean, "width"?: number }` | Render a web page in headless Chromium and return a PNG screenshot as base64 JSON. |
+| `/v1/seo-audit` | $0.02–0.2 | `{ "url"?: string, "urls"?: string[], "mode"?: string }` | Audit web pages for SEO + GEO (generative-engine optimization). |
 | `/v1/solana/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Rug/trap safety check for a Solana SPL or Token-2022 token: mint authority (supply inflation), freeze authority (the Solana honeypot — the issuer c… |
 | `/v1/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Rug/honeypot safety check for an ERC-20 token on Base (from on-chain reads — no API key): ERC-20 conformance, ownership renounce, mint-capability… |
 | `/v1/web-extract` | $0.005 | `{ "url": string }` | Fetch a web page and return clean readable text + light markdown + title/description/links. |
