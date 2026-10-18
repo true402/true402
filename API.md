@@ -1,8 +1,8 @@
 # true402 API reference
 
-Every endpoint below is live at `https://true402.dev/api`. There is no account, no API key and no signup — paid endpoints answer `402` with payment requirements, you sign a USDC authorization on Base and retry. Most also serve a small free daily allowance per IP, so you can evaluate them with no wallet at all.
+Every endpoint below is live at `https://true402.dev/api`. There is no account, no API key and no signup — paid endpoints answer `402` with payment requirements, you sign a USDC payment (on Base, or Solana) and retry. Most also serve a small free daily allowance per IP, so you can evaluate them with no wallet at all.
 
-**This file is generated from the live [OpenAPI spec](https://true402.dev/api/openapi.json), which is authoritative.**
+**The Paid table is generated from the live [OpenAPI spec](https://true402.dev/api/openapi.json), which is authoritative.**
 
 ## Free
 
@@ -18,6 +18,12 @@ Every endpoint below is live at `https://true402.dev/api`. There is no account, 
 | `/v1/models` | GET | List available models |
 | `/v1/models/{modelId}` | GET | Get model details |
 | `/v1/services` | GET | List registered services |
+| `/.well-known/x402-service.json` | GET | true402's own service manifest (the format below) |
+| `/v1/chain-coverage` | GET | Block ranges the chain archive covers (backs liquidity-history) |
+| `/v1/free-trial` | GET | Your remaining free-trial allowance today (reading it never uses one) |
+| `/v1/radar` | GET | Newly launched Base tokens flagged dangerous |
+| `/v1/services/{id}` | GET | One listing |
+| `/v1/services/{id}/reputation` | GET | A listing's transaction history and Trust Score |
 | `/v1/services/register` | GET | The registration contract — schema, worked example, common failures |
 | `/v1/services/register` | POST | Register an x402 service (see **Listing a service** below) |
 
@@ -43,8 +49,8 @@ Every endpoint below is live at `https://true402.dev/api`. There is no account, 
 | `/v1/chat/completions` | $0.0001–5.00 | — | OpenAI-compatible chat completions endpoint. |
 | `/v1/defi-yields` | $0.005 | `{ "chain"?: string, "project"?: string, "asset"?: string, "stablecoinOnly"?: boolean, "minTvlUsd"?: number, "includeOutliers"?: boolean, "limit"?: number }` | Filter + rank live DeFi lending/staking pool APYs across every protocol/chain (DefiLlama, ~15k pools). |
 | `/v1/ethereum/address-safety` | $0.005 | `{ "address": string, "chain"?: string }` | Structural safety profile for ANY Ethereum address — an EOA or an arbitrary contract — before an agent sends funds to it, approves it, or calls it. |
-| `/v1/ethereum/deployer-check` | $0.008 | `{ "token": string, "chain"?: string, "deep"?: boolean }` | Resolves the deployer of a Ethereum token and profiles that wallet's reputation: age (tx-count), balance, and whether it is a FRESH throwaway spun… |
-| `/v1/ethereum/token-report` | $0.008 | `{ "token": string, "chain"?: string }` | The flagship composite for a Ethereum ERC-20 — one call instead of five. |
+| `/v1/ethereum/deployer-check` | $0.008 | `{ "token": string, "chain"?: string, "deep"?: boolean }` | Resolves the deployer of an Ethereum token and profiles that wallet's reputation: age (tx-count), balance, and whether it is a FRESH throwaway spun… |
+| `/v1/ethereum/token-report` | $0.008 | `{ "token": string, "chain"?: string }` | The flagship composite for an Ethereum ERC-20 — one call instead of five. |
 | `/v1/ethereum/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Rug/honeypot safety check for an ERC-20 token on Ethereum (from on-chain reads — no API key): ERC-20 conformance, ownership renounce, mint-capabili… |
 | `/v1/headers-check` | $0.003 | `{ "url": string }` | Fetch a URL and analyse its HTTP security headers (HSTS, CSP, X-Frame-Options, …) into present/missing + a 0–100 score. |
 | `/v1/keyword-ideas` | $0.05 | `{ "seed": string, "limit"?: integer, "location"?: integer, "language"?: string }` | Related and long-tail keyword ideas for a seed term, each with search volume, CPC, competition and search intent. |
@@ -72,23 +78,23 @@ the tool's arguments as the JSON body, USDC on Base).
 | Listing | Price | Body |
 |---|---|---|
 | [Token Safety](https://fiatdock.com/s/svc_712fa970-0f2a-4092-8042-e75946cead03) | $0.005 | `{ "token": string, "chain"?: "base" \| "ethereum" \| "bsc" }` |
-| [Token Report](https://fiatdock.com/s/svc_2bbf8ea2-baed-4f72-abac-6295f880b67a) | $0.01 | `{ "token": string, "chain"?: "base" \| "ethereum" \| "bsc" }` |
-| [Address Safety](https://fiatdock.com/s/svc_78c2e7d0-a1a6-4617-a45b-c0ab017037bc) | $0.005 | `{ "address": string, "chain"?: "base" \| "ethereum" \| "bsc" }` |
+| [Token Report](https://fiatdock.com/s/svc_2bbf8ea2-baed-4f72-abac-6295f880b67a) | $0.008 | `{ "token": string, "chain"?: "base" \| "ethereum" \| "bsc" }` |
+| [Wallet Risk](https://fiatdock.com/s/svc_78c2e7d0-a1a6-4617-a45b-c0ab017037bc) | $0.005 | `{ "address": string, "chain"?: "base" \| "ethereum" \| "bsc" }` |
 | [Deployer Check](https://fiatdock.com/s/svc_fc424a1d-8f50-42dc-8d65-d99ce85bee46) | $0.008 | `{ "token": string, "chain"?: "base" \| "ethereum" }` |
-| [Tx Preflight](https://fiatdock.com/s/svc_b459b285-77ee-4882-88c4-b08f4a401b91) | $0.008 | `{ "from": string, "to": string, "data"?: string, "value"?: string }` (Base) |
-| [Token Dossier](https://fiatdock.com/s/svc_eddced45-d48d-4857-a853-571760dde719) | $0.10 | `{ "token": string }` (Base) |
+| [Transaction Simulation](https://fiatdock.com/s/svc_b459b285-77ee-4882-88c4-b08f4a401b91) | $0.008 | `{ "from": string, "to": string, "data"?: string, "value"?: string }` (Base) |
+| [Rug Check Dossier](https://fiatdock.com/s/svc_eddced45-d48d-4857-a853-571760dde719) | $0.10 | `{ "token": string }` (Base) |
 | [Solana Token Safety](https://fiatdock.com/s/svc_59058cbb-f8a1-451c-bd26-ae89ab7cc5df) | $0.005 | `{ "token": string }` (base58 mint) |
 | [Liquidity History](https://fiatdock.com/s/svc_12587477-5940-4e4a-ac20-aefcb9a35baa) | $0.005 | `{ "token": string, "limit"?: number }` (Base) |
-| [New Pairs](https://fiatdock.com/s/svc_a397f690-70c1-4e79-851a-9e1d436d03b8) | $0.003 | `{ "since"?: number, "limit"?: number, "dex"?: string }` (Base) |
+| [New Pairs](https://fiatdock.com/s/svc_a397f690-70c1-4e79-851a-9e1d436d03b8) | $0.003 | `{ "since"?: number, "limit"?: number, "dex"?: string, "withToken"?: boolean }` (Base) |
 | [Liquidity Pulls](https://fiatdock.com/s/svc_fbe25ea2-04b2-4983-ac92-891a4bb68479) | $0.003 | `{ "since"?: number, "limit"?: number, "dex"?: string, "minQuote"?: number }` (Base) |
 | [Whale Swaps](https://fiatdock.com/s/svc_65609f66-a093-445d-ada7-9d13fed22953) | $0.005 | `{ "min"?: number, "dex"?: string, "since"?: number, "limit"?: number, "direction"?: string }` (Base) |
 | [Prediction Markets](https://fiatdock.com/s/svc_600c8759-f2e1-4bd2-96fc-737e5255c3e9) | $0.005 | `{ "query": string, "limit"?: number }` |
-| [DeFi Yields](https://fiatdock.com/s/svc_b5dd18c2-c82a-4f67-b287-b90598a670a5) | $0.005 | `{ "chain"?: string, "project"?: string, "asset"?: string, "stablecoinOnly"?: boolean, "minTvlUsd"?: number, "limit"?: number }` |
+| [DeFi Yields](https://fiatdock.com/s/svc_b5dd18c2-c82a-4f67-b287-b90598a670a5) | $0.005 | `{ "chain"?: string, "project"?: string, "asset"?: string, "stablecoinOnly"?: boolean, "minTvlUsd"?: number, "includeOutliers"?: boolean, "limit"?: number }` |
 | [Quant](https://fiatdock.com/s/svc_64d3be32-5ced-4d2d-89fb-02132b0088dd) | $0.003 | `{ "function": string, "params": object }` |
-| [Screenshot](https://fiatdock.com/s/svc_bbc969e8-c8dc-49f7-804e-f87d5d9044ad) | $0.01 | `{ "url": string, "fullPage"?: boolean, "width"?: number }` |
-| [Web Extract](https://fiatdock.com/s/svc_8b5c724e-a162-4b80-9976-7975b58c1552) | $0.005 | `{ "url": string }` |
+| [Screenshot](https://fiatdock.com/s/svc_bbc969e8-c8dc-49f7-804e-f87d5d9044ad) | $0.004 | `{ "url": string, "fullPage"?: boolean, "width"?: number }` |
+| [Web Scraping](https://fiatdock.com/s/svc_8b5c724e-a162-4b80-9976-7975b58c1552) | $0.005 | `{ "url": string }` |
 | [Link Preview](https://fiatdock.com/s/svc_f8d26c50-b1ed-49b5-b962-7bfcb6eb11f4) | $0.003 | `{ "url": string }` |
-| [SEO + GEO Page Audit](https://fiatdock.com/s/svc_e60d1345-ee04-4f6f-9c85-915c6970976d) | $0.04 | `{ "url": string, "mode"?: "both" \| "seo" \| "geo" }` (one page) |
+| [SEO + GEO Page Audit](https://fiatdock.com/s/svc_e60d1345-ee04-4f6f-9c85-915c6970976d) | $0.02 | `{ "url": string, "mode"?: "both" \| "seo" \| "geo" }` (one page) |
 | [Robots Check](https://fiatdock.com/s/svc_5c3f119b-73f0-4ef0-b456-ddd188c2e701) | $0.003 | `{ "url": string }` |
 | [Security Headers Check](https://fiatdock.com/s/svc_9b3a144e-bef3-4031-81b7-e40b51012564) | $0.003 | `{ "url": string }` |
 
@@ -142,6 +148,8 @@ curl -X POST https://true402.dev/api/v1/services/register \
 | 422 | `manifest_unavailable` | We could not fetch `<url>/.well-known/x402-service.json` and you sent no `manifest`. Publish that document, or include `manifest` in the body. |
 | 422 | `manifest_invalid` | The document was fetched but is not a valid manifest. The response names the failing field. |
 | 400 | `validation_error` | `url` is missing or not a valid URL. |
+| 409 | `already_registered` | That URL is listed and the change could not be proven from its well-known. `error.listing.id` names the listing; publish the new manifest at the well-known (or use the paid update below). Not retryable as is. |
+| 429 | `rate_limited` | Too many submissions of one URL or host. Wait for `Retry-After`; repeated overruns lengthen the lockout. |
 
 `GET /v1/services/register` returns this same contract as JSON, including the worked example.
 
@@ -198,7 +206,7 @@ The listing keeps its `id`, `url` and history.
 
 ```bash
 # 1. unpaid -> 402 with the requirements (body + a base64 PAYMENT-REQUIRED header)
-curl -X POST https://true402.dev/api/v1/base/token-safety \
+curl -X POST https://true402.dev/api/v1/token-safety \
   -H 'content-type: application/json' -d '{"token":"0x…"}'
 
 # 2. sign an EIP-3009 USDC authorization for EXACTLY accepts[i].amount
