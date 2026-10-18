@@ -5,15 +5,15 @@ No accounts. No API keys. No signup. No KYC. Wallet = identity.
 
 The internet solved information exchange but left value exchange broken — intermediaries, accounts,
 KYC. [x402](https://x402.org) fixes payment at the protocol level, and true402 is a marketplace built
-on that fix: **27 live services**, each priced per call in USDC on Base, each discoverable and
-payable by an agent with no human in the loop.
+on that fix: dozens of live services, each priced per call in USDC (on Base, or Solana), each
+discoverable and payable by an agent with no human in the loop.
 
 **Live now at [true402.dev](https://true402.dev)** · [catalog](https://true402.dev/catalog) ·
 [OpenAPI](https://true402.dev/api/openapi.json) · [MCP manifest](https://true402.dev/api/.well-known/mcp.json)
 
 ```bash
 # no key, no account — the first few calls each day are free
-curl -X POST https://true402.dev/api/v1/base/token-safety \
+curl -X POST https://true402.dev/api/v1/token-safety \
   -H 'content-type: application/json' -d '{"token":"0x4200000000000000000000000000000000000006"}'
 ```
 
@@ -28,7 +28,7 @@ because they are built on a chain archive we have been keeping rather than a que
 
 Send an **unsigned** transaction and get three independent lenses:
 
-1. **Does it revert?** — simulated against current state. The largest single class of agent failure.
+1. **Does it revert?** — simulated against current state, before any gas is spent.
 2. **What does it authorise?** — the calldata decoded. An agent that cannot read a selector cannot
    tell `transfer` from `approve(spender, 2²⁵⁶−1)` — an unbounded claim on its balance that outlives
    the trade by design.
@@ -60,7 +60,7 @@ dressed up as "safe". Live coverage: [`/v1/chain-coverage`](https://true402.dev/
 
 | Service | Price | What it does |
 |---|---|---|
-| `/v1/base/token-safety` | $0.005 | ERC-20 rug/honeypot pre-check → score, flags, liquidity depth + a gas-free buy/sell simulation |
+| `/v1/token-safety` (Base) | $0.005 | ERC-20 rug/honeypot pre-check → score, flags, liquidity depth + a gas-free buy/sell simulation |
 | `/v1/base/token-report` | $0.008 | The composite: safety + live rug/whale activity → one avoid/caution/ok verdict, plus price, market cap and liquidity |
 | `/v1/base/address-safety` | $0.005 | What *is* this counterparty — EOA or contract, upgradeable proxy, ownership, balances |
 | `/v1/base/deployer-check` | $0.008 | Deployer reputation — wallet age and history behind a contract |
@@ -85,7 +85,7 @@ dressed up as "safe". Live coverage: [`/v1/chain-coverage`](https://true402.dev/
 | `/v1/chat/completions` | cost + 3% | OpenAI-compatible inference across many models |
 
 **Multi-chain:** `token-safety`, `token-report` and `address-safety` are also mounted per chain at
-`/v1/{ethereum,bsc}/…`, and Solana has its own non-EVM path at `/v1/solana/token-safety`.
+`/v1/{ethereum,bsc}/…` (plus `deployer-check` on Ethereum), and Solana has its own non-EVM path at `/v1/solana/token-safety`.
 The full, always-current list is the [catalog](https://true402.dev/catalog) — this table is written
 by hand and the API is authoritative.
 
@@ -106,14 +106,16 @@ The MCP server **discovers stalls from the live OpenAPI spec at startup**, so a 
 marketplace becomes a tool in your agent with no package update. The others carry an explicit tool
 list, so they gain new stalls on their next release.
 
-An **OpenClaw / Hermes skill** is published too: `openclaw skills install true402-token-safety`.
+**Agent skills** are published too — OpenClaw: `openclaw skills install true402-token-safety`;
+Hermes: `hermes skills tap add true402/hermes-skills`.
 
 ## The x402 flow
 
 1. Agent POSTs without payment → `402` with payment requirements.
-2. Agent signs a USDC authorization (Base, EIP-3009) and retries with a `PAYMENT-SIGNATURE` header
+2. Agent signs a USDC authorization (EIP-3009 on Base, or a Solana transfer) and retries with a `PAYMENT-SIGNATURE` header
    (x402 v2; the v1 name `X-PAYMENT` is also accepted — see [Payment headers](API.md#payment-headers-v2-and-v1-are-both-accepted)).
-3. Server verifies via a no-KYC facilitator → serves the response → settles on-chain, async.
+3. Server verifies via a no-KYC facilitator, runs the service, settles on-chain, and releases the
+   answer once the settlement goes through (a definitively refused settlement withholds it).
 
 The rules that surprise people writing their own payer:
 
@@ -127,14 +129,14 @@ The rules that surprise people writing their own payer:
   errors or times out, your signed authorization is never submitted, so there is nothing to refund.
 
 Full rules: **[true402.dev/terms](https://true402.dev/terms)**. What is logged and kept — no cookies,
-no analytics, IPs stored only as a salted hash for the free-trial quota:
+no analytics, and the free-trial quota stores only a salted hash of your IP:
 **[true402.dev/privacy](https://true402.dev/privacy)**. See the [API reference](API.md) for the full
 endpoint list.
 
 ## Payments & anonymity
 
-- **Rail:** USDC on **Base** (EIP-3009). Network and facilitator are env-driven.
-- **No-KYC by design:** the facilitator is self-hosted (`src/facilitator`) or another no-KYC one.
+- **Rails:** USDC on **Base** (EIP-3009) and USDC on **Solana**.
+- **No-KYC by design:** the facilitator is self-hosted or another no-KYC one.
   Coinbase CDP is deliberately **not** used — a CDP account is an operator identity.
 - **Lightning** (BTC via BOLT11) is an optional second rail, off by default.
 - Free to list. Ranked by settlement history, not by payment to be listed.
@@ -144,15 +146,15 @@ endpoint list.
 
 ## Safety controls
 
-- `CHAT_DISABLED` / `STALLS_DISABLED` — instant kill switches.
-- `MAX_REQUEST_PRICE_USD`, `DAILY_SPEND_CAP_USD` — blast-radius caps.
+- Instant kill switches for chat and for the paid stalls.
+- A per-request price ceiling and a daily processed-volume cap — blast-radius limits.
 - SSRF guards on registration and on every outbound fetch; the render sidecar egresses only through
   a filtering proxy on an internal network.
 - Single-use payment authorizations, enforced atomically — a signed authorization cannot be replayed.
 
 ## Docs
 
-- **[API.md](API.md)** — every endpoint, price and request body, generated from the live OpenAPI spec
+- **[API.md](API.md)** — every endpoint, price and request body (the paid table mirrors the live OpenAPI spec)
 - **[OpenAPI](https://true402.dev/api/openapi.json)** — authoritative, machine-readable
 - **[llms.txt](https://true402.dev/llms.txt)** — plain-text summary for browsing LLMs
 - **[Catalog](https://true402.dev/catalog)** — the live floor, fetched from the running registry
