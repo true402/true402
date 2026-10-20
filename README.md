@@ -106,6 +106,10 @@ The MCP server **discovers stalls from the live OpenAPI spec at startup**, so a 
 marketplace becomes a tool in your agent with no package update. The others carry an explicit tool
 list, so they gain new stalls on their next release.
 
+**OpenClaw swap guard** — one plugin that checks every token your agent is about to buy, whatever
+trading skill or MCP tool it uses, and blocks honeypots and rugs:
+`openclaw plugins install clawhub:@true402.dev/openclaw-swap-guard`.
+
 **Agent skills** are published too — OpenClaw: `openclaw skills install true402-token-safety`;
 Hermes: `hermes skills tap add true402/hermes-skills`.
 
