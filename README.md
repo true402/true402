@@ -72,7 +72,7 @@ dressed up as "safe". Live coverage: [`/v1/chain-coverage`](https://true402.dev/
 | `/v1/quant` | $0.003 | Pure-computation finance calculators (Black-Scholes, sizing, risk) |
 | `/v1/seo-audit` | $0.02/page | SEO + GEO (generative-engine) audit → structured report |
 | `/v1/screenshot` | $0.004 | Render a page to PNG behind an SSRF-filtered egress proxy |
-| `/v1/web-extract` | $0.005 | URL → clean text, markdown, links, metadata |
+| `/v1/web-extract` | $0.003 | URL → clean text, markdown, links, metadata |
 | `/v1/link-preview` | $0.003 | URL → Open Graph / unfurl card |
 | `/v1/robots-check` | $0.003 | A site's AI-crawler policy (GPTBot, ClaudeBot, …) + sitemaps + llms.txt |
 | `/v1/headers-check` | $0.003 | HTTP security-header analysis + score |
