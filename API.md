@@ -65,7 +65,7 @@ Every endpoint below is live at `https://true402.dev/api`. There is no account, 
 | `/v1/serp` | $0.02 | `{ "keyword": string, "target"?: string, "depth"?: integer, "location"?: integer, "language"?: string, "device"?: string }` | Live Google organic results for one query: the top 10–30 results with position, domain, URL, title and snippet, the SERP features present, and — wi… |
 | `/v1/solana/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Rug/trap safety check for a Solana SPL or Token-2022 token: mint authority (supply inflation), freeze authority (the Solana honeypot — the issuer c… |
 | `/v1/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Rug/honeypot safety check for an ERC-20 token on Base (from on-chain reads — no API key): ERC-20 conformance, ownership renounce, mint-capability… |
-| `/v1/web-extract` | $0.005 | `{ "url": string }` | Fetch a web page and return clean readable text + light markdown + title/description/links. |
+| `/v1/web-extract` | $0.003 | `{ "url": string }` | Fetch a web page and return clean readable text + light markdown + title/description/links. |
 
 ## Also on Agentic.Market (via FiatDock)
 
@@ -92,7 +92,7 @@ the tool's arguments as the JSON body, USDC on Base).
 | [DeFi Yields](https://fiatdock.com/s/svc_b5dd18c2-c82a-4f67-b287-b90598a670a5) | $0.005 | `{ "chain"?: string, "project"?: string, "asset"?: string, "stablecoinOnly"?: boolean, "minTvlUsd"?: number, "includeOutliers"?: boolean, "limit"?: number }` |
 | [Quant](https://fiatdock.com/s/svc_64d3be32-5ced-4d2d-89fb-02132b0088dd) | $0.003 | `{ "function": string, "params": object }` |
 | [Screenshot](https://fiatdock.com/s/svc_bbc969e8-c8dc-49f7-804e-f87d5d9044ad) | $0.004 | `{ "url": string, "fullPage"?: boolean, "width"?: number }` |
-| [Web Scraping](https://fiatdock.com/s/svc_8b5c724e-a162-4b80-9976-7975b58c1552) | $0.005 | `{ "url": string }` |
+| [Web Scraping](https://fiatdock.com/s/svc_8b5c724e-a162-4b80-9976-7975b58c1552) | $0.003 | `{ "url": string }` |
 | [Link Preview](https://fiatdock.com/s/svc_f8d26c50-b1ed-49b5-b962-7bfcb6eb11f4) | $0.003 | `{ "url": string }` |
 | [SEO + GEO Page Audit](https://fiatdock.com/s/svc_e60d1345-ee04-4f6f-9c85-915c6970976d) | $0.02 | `{ "url": string, "mode"?: "both" \| "seo" \| "geo" }` (one page) |
 | [Robots Check](https://fiatdock.com/s/svc_5c3f119b-73f0-4ef0-b456-ddd188c2e701) | $0.003 | `{ "url": string }` |
