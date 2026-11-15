@@ -82,6 +82,7 @@ dressed up as "safe". Live coverage: [`/v1/chain-coverage`](https://true402.dev/
 | `/v1/ranked-keywords` | $0.05 | The keywords a domain already ranks for, with position and the URL that ranks |
 | `/v1/serp` | $0.02 | Live Google results for a query (top 10–30) and where a target domain ranks |
 | `/v1/web-search` | $0.008 | Web search for agents: the top live web results (title, URL, domain, snippet) |
+| `/v1/recommend` | $0.005 | Which x402 API to use for a task: best matches in the Coinbase Bazaar, with price and real usage |
 | `/v1/keyword-ideas` | $0.05 | Long-tail keyword ideas from a seed term, with volume and search intent |
 | `/v1/chat/completions` | cost + 3% | OpenAI-compatible inference across many models |
 
