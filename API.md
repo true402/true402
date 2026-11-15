@@ -71,7 +71,7 @@ Every endpoint below is live at `https://true402.dev/api`. There is no account, 
 
 ## Also on Agentic.Market (via FiatDock)
 
-Twenty of the stalls are also sold through the [FiatDock](https://fiatdock.com) marketplace,
+Twenty-one of the stalls are also sold through the [FiatDock](https://fiatdock.com) marketplace,
 so they show up in Coinbase's x402 Bazaar and in Agentic.Market search. Same checks, same prices,
 and the payment still goes straight to the true402 wallet (`0xFe257Ef6Dc89F5b688aC52Ef3eb8648C629fA9C4`).
 Use whichever your agent already knows how to pay: each listing is a plain x402 endpoint (`POST`,
@@ -99,6 +99,7 @@ the tool's arguments as the JSON body, USDC on Base).
 | [SEO + GEO Page Audit](https://fiatdock.com/s/svc_e60d1345-ee04-4f6f-9c85-915c6970976d) | $0.02 | `{ "url": string, "mode"?: "both" \| "seo" \| "geo" }` (one page) |
 | [Robots Check](https://fiatdock.com/s/svc_5c3f119b-73f0-4ef0-b456-ddd188c2e701) | $0.003 | `{ "url": string }` |
 | [Security Headers Check](https://fiatdock.com/s/svc_9b3a144e-bef3-4031-81b7-e40b51012564) | $0.003 | `{ "url": string }` |
+| [API Recommender](https://fiatdock.com/s/svc_dac9e333-b9b2-4665-9790-fb968afbe762) | $0.005 | `{ "need": string, "maxPriceUsd"?: number, "limit"?: integer }` |
 
 Calling `true402.dev` directly gives you more: multi-page SEO audits, the keyword and backlink
 stalls, and the free daily allowance (FiatDock calls are always paid).
