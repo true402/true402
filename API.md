@@ -66,6 +66,7 @@ Every endpoint below is live at `https://true402.dev/api`. There is no account, 
 | `/v1/solana/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Rug/trap safety check for a Solana SPL or Token-2022 token: mint authority (supply inflation), freeze authority (the Solana honeypot — the issuer c… |
 | `/v1/token-safety` | $0.005 | `{ "token": string, "chain"?: string }` | Rug/honeypot safety check for an ERC-20 token on Base (from on-chain reads — no API key): ERC-20 conformance, ownership renounce, mint-capability… |
 | `/v1/web-extract` | $0.003 | `{ "url": string }` | Fetch a web page and return clean readable text + light markdown + title/description/links. |
+| `/v1/web-search` | $0.008 | `{ "query": string, "count"?: integer, "language"?: string, "location"?: integer }` | Web search for AI agents: the top live web results for a query (title, URL, domain, snippet) plus related searches. |
 
 ## Also on Agentic.Market (via FiatDock)
 
