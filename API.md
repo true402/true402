@@ -59,6 +59,7 @@ Every endpoint below is live at `https://true402.dev/api`. There is no account, 
 | `/v1/prediction-markets` | $0.005 | `{ "query": string, "limit"?: number }` | Keyword-search live prediction markets across Polymarket, Limitless, and Manifold; returns normalized markets (probability outcomes, USD volume, cl… |
 | `/v1/quant` | $0.003 | `{ "function": string, "params": object }` | Deterministic finance calculators in one dispatch endpoint. |
 | `/v1/ranked-keywords` | $0.05 | `{ "target": string, "limit"?: integer, "location"?: integer, "language"?: string }` | Which keywords a domain already ranks for in organic search, with position, search volume, CPC and competition. |
+| `/v1/recommend` | $0.005 | `{ "need": string, "maxPriceUsd"?: number, "limit"?: integer }` | Describe what the agent needs; get the best-matching paid endpoints in the Coinbase x402 Bazaar with price, networks and the Bazaar's own 30-day us… |
 | `/v1/robots-check` | $0.003 | `{ "url": string }` | Fetch a site's robots.txt + llms.txt and report whether the major AI crawlers are allowed/blocked, plus sitemaps. |
 | `/v1/screenshot` | $0.004 | `{ "url": string, "fullPage"?: boolean, "width"?: number }` | Render a web page in headless Chromium and return a PNG screenshot as base64 JSON. |
 | `/v1/seo-audit` | $0.02–0.2 | `{ "url"?: string, "urls"?: string[], "mode"?: string }` | Audit web pages for SEO + GEO (generative-engine optimization). |
